@@ -1,0 +1,68 @@
+format_version: "13"
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+project_type: android
+
+app:
+  envs:
+  - GRADLE_BUILD_FILE_PATH: build.gradle.kts
+  - GRADLEW_PATH: "./gradlew"
+  - MODULE: app
+  - VARIANT: debug
+
+workflows:
+
+  test:
+    summary: Run unit tests
+    steps:
+    - git-clone@8: {}
+    - restore-npm-cache@3: {}
+    - install-missing-android-tools@3:
+        inputs:
+        - gradlew_path: $GRADLEW_PATH
+    - android-unit-test@1:
+        inputs:
+        - project_location: $BITRISE_SOURCE_DIR
+        - module: $MODULE
+        - variant: $VARIANT
+    - save-npm-cache@1: {}
+    - deploy-to-bitrise-io@2: {}
+
+  build:
+    summary: Build debug APK
+    steps:
+    - git-clone@8: {}
+    - restore-npm-cache@3: {}
+    - install-missing-android-tools@3:
+        inputs:
+        - gradlew_path: $GRADLEW_PATH
+    - android-unit-test@1:
+        inputs:
+        - project_location: $BITRISE_SOURCE_DIR
+        - module: $MODULE
+        - variant: $VARIANT
+    - android-build@1:
+        inputs:
+        - project_location: $BITRISE_SOURCE_DIR
+        - module: $MODULE
+        - variant: $VARIANT
+    - save-npm-cache@1: {}
+    - deploy-to-bitrise-io@2: {}
+
+  release:
+    summary: Build release APK
+    envs:
+    - VARIANT: release
+    steps:
+    - git-clone@8: {}
+    - restore-npm-cache@3: {}
+    - install-missing-android-tools@3:
+        inputs:
+        - gradlew_path: $GRADLEW_PATH
+    - android-build@1:
+        inputs:
+        - project_location: $BITRISE_SOURCE_DIR
+        - module: $MODULE
+        - variant: $VARIANT
+        - build_type: apk
+    - save-npm-cache@1: {}
+    - deploy-to-bitrise-io@2: {}
