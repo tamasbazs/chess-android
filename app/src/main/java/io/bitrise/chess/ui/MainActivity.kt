@@ -32,6 +32,8 @@ class MainActivity : AppCompatActivity() {
     private fun updateStatus() {
         val game = boardView.gameState
         val turnName = game.currentTurn.name.lowercase().replaceFirstChar { it.uppercase() }
+        // Full-move number, as in chess notation: it increases after Black moves.
+        val moveNumber = game.moveHistory.size / 2 + 1
         statusText.text = when (game.status) {
             GameStatus.CHECKMATE -> {
                 val winner = if (game.currentTurn == io.bitrise.chess.model.PieceColor.WHITE) "Black" else "White"
@@ -39,8 +41,8 @@ class MainActivity : AppCompatActivity() {
             }
             GameStatus.STALEMATE -> "Stalemate! It's a draw."
             GameStatus.DRAW -> "Draw!"
-            GameStatus.CHECK -> "$turnName is in check!"
-            GameStatus.ONGOING -> "$turnName's turn"
+            GameStatus.CHECK -> "$turnName is in check! · Move $moveNumber"
+            GameStatus.ONGOING -> "$turnName's turn · Move $moveNumber"
         }
     }
 }
