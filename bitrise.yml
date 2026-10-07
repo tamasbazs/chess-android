@@ -15,7 +15,7 @@ workflows:
     summary: Run unit tests
     steps:
     - git-clone@8: {}
-    - restore-npm-cache@3: {}
+    - restore-gradle-cache@3: {}
     - install-missing-android-tools@3:
         inputs:
         - gradlew_path: $GRADLEW_PATH
@@ -24,14 +24,14 @@ workflows:
         - project_location: $BITRISE_SOURCE_DIR
         - module: $MODULE
         - variant: $VARIANT
-    - save-npm-cache@1: {}
+    - save-gradle-cache@1: {}
     - deploy-to-bitrise-io@2: {}
 
   build:
     summary: Build debug APK
     steps:
     - git-clone@8: {}
-    - restore-npm-cache@3: {}
+    - restore-gradle-cache@3: {}
     - install-missing-android-tools@3:
         inputs:
         - gradlew_path: $GRADLEW_PATH
@@ -45,7 +45,7 @@ workflows:
         - project_location: $BITRISE_SOURCE_DIR
         - module: $MODULE
         - variant: $VARIANT
-    - save-npm-cache@1: {}
+    - save-gradle-cache@1: {}
     - deploy-to-bitrise-io@2: {}
 
   release:
@@ -54,7 +54,7 @@ workflows:
     - VARIANT: release
     steps:
     - git-clone@8: {}
-    - restore-npm-cache@3: {}
+    - restore-gradle-cache@3: {}
     - install-missing-android-tools@3:
         inputs:
         - gradlew_path: $GRADLEW_PATH
@@ -64,5 +64,5 @@ workflows:
         - module: $MODULE
         - variant: $VARIANT
         - build_type: apk
-    - save-npm-cache@1: {}
+    - save-gradle-cache@1: {}
     - deploy-to-bitrise-io@2: {}
